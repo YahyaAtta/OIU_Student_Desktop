@@ -1,6 +1,6 @@
-import 'package:desktop_view/model/db_provider.dart';
+import 'package:oiu_student_desktop/model/db_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:desktop_view/Auth/splash.dart';
+import 'package:oiu_student_desktop/Auth/splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Sqldb sqldb = Sqldb();
@@ -12,7 +12,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

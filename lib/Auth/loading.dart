@@ -1,9 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 
 // import 'package:audioplayers/audioplayers.dart';
-import 'package:desktop_view/animation/animate.dart';
-import 'package:desktop_view/CRUD/dashboard.dart';
+import 'package:oiu_student_desktop/animation/animate.dart';
+import 'package:oiu_student_desktop/CRUD/dashboard.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +19,8 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  double progress = 0.0;
-Timer? timer;
+  double progress = 0.0; // Inital Start
+  Timer? timer;
   playSound(BuildContext context, String path) async {
     var logonSound = path;
     final file = File(logonSound).existsSync();
@@ -45,11 +47,17 @@ Timer? timer;
     }
   }
 
-   @override
+  @override
   void initState() {
     super.initState();
+    if (kDebugMode) {
+      playSound(context, r"assets/audios/database_scan.wav");
+    } else {
+      playSound(
+          context, r"data/flutter_assets/assets/audios/database_scan.wav");
+    }
     setState(() {
-      timer = Timer.periodic(const Duration(milliseconds: 120), (timer) {
+      timer = Timer.periodic(const Duration(milliseconds: 105), (timer) {
         if (progress.floorToDouble() == 1.0) {
           timer.cancel();
           Future.delayed(const Duration(seconds: 1), () {
@@ -60,14 +68,6 @@ Timer? timer;
           });
           progress = 0.0;
         } else {
-          if(kDebugMode){
-            playSound(context,
-                r"assets/audios/database_scan.wav");
-          }
-          else{
-            playSound(context,
-                r"data/flutter_assets/assets/audios/database_scan.wav");
-          }
           setState(() {
             progress = progress + 0.01;
           });
@@ -75,62 +75,60 @@ Timer? timer;
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(children: [
         SizedBox(
-        width: 200,
-        child: Container(
-          margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10),
-          decoration: BoxDecoration(
-            color: Colors.black26,
-            borderRadius: BorderRadius.circular(25),
+            width: 200,
+            child: Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10),
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(25),
+              ),
+            )),
+        Expanded(
+          child: Center(
+            child: Stack(
+              children: [
+                Container(
+                  height: 160,
+                  width: 160,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(colors: [
+                      Colors.deepPurple,
+                      Colors.transparent,
+                    ]),
+                  ),
+                  child: CircularProgressIndicator.adaptive(
+                    value: progress,
+                  ),
+                ),
+                Container(
+                  height: 160,
+                  width: 160,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(colors: [
+                      Colors.deepPurple,
+                      Colors.transparent,
+                    ]),
+                  ),
+                  child: Center(
+                      child: Text(
+                    '${(progress * 100).floor()}%',
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.w600),
+                  )),
+                ),
+              ],
+            ),
           ),
-        )) ,
-      Expanded(
-      child: Center(
-        child: Stack(
-          children: [
-            Container(
-              height: 160,
-              width: 160,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(colors: [
-                  Colors.deepPurple,
-                  Colors.transparent,
-                ]),
-              ),
-              child: CircularProgressIndicator.adaptive(
-                value: progress,
-              ),
-            ),
-            Container(
-              height: 160,
-              width: 160,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(colors: [
-                  Colors.deepPurple,
-                  Colors.transparent,
-                ]),
-              ),
-              child: Center(
-                  child: Text(
-                '${(progress * 100).floor()}%',
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              )),
-            ),
-          ],
         ),
-      ),
-    ) ,
       ]),
     );
   }
 }
-
-
-

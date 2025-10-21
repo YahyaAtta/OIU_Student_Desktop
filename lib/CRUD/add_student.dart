@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:desktop_view/model/modal_data.dart';
+import 'package:oiu_student_desktop/model/modal_data.dart';
+import '../main.dart';
 
 class AddStudent extends StatefulWidget {
   @override
@@ -136,66 +139,45 @@ class _AddStudentState extends State<AddStudent> {
                     isExpanded: true,
                     hint: const Text("Please Choose Your Department"),
                     items: [
-                    'Computer Science' , 'Information Technology' , 'Information System'
-                  ].map((e) => DropdownMenuItem(value: e,child: Text(e) ,)).toList(),
-onChanged: (c){
-setState(() {
-  facultydep = c! ;
-});
-},
-                  ) ,
-                  // Container(
-                  //   margin: const EdgeInsets.all(12),
-                  //   child: TextFormField(
-                  //     validator: (val) {
-                  //       if (val!.isEmpty) {
-                  //         return "Please fill field";
-                  //       }
-                  //       return null;
-                  //     },
-                  //     controller: facultydep,
-                  //     style: const TextStyle(fontSize: 19),
-                  //     decoration: InputDecoration(
-                  //       hintText: 'Enter Faculty Department',
-                  //       // errorText: 'Error!',
-                  //       // errorStyle: TextStyle(fontSize: 21),
-                  //       prefixIcon: const Padding(
-                  //         padding: EdgeInsets.all(12.0),
-                  //         child: Icon(Icons.school, size: 40),
-                  //       ),
-                  //       contentPadding: const EdgeInsets.all(20),
-                  //       filled: true,
-                  //       border: OutlineInputBorder(
-                  //         borderRadius: BorderRadius.circular(25),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                      'Computer Science',
+                      'Information Technology',
+                      'Information System'
+                    ]
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    onChanged: (c) {
+                      setState(() {
+                        facultydep = c!;
+                      });
+                    },
+                  ),
                   Container(
                     margin: const EdgeInsets.all(12),
-                    child: TextFormField(
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return "Fill this Field";
-                        }
-                        return null;
+                    child: DropdownButton(
+                      value: universityYear,
+                      alignment: Alignment.topLeft,
+                      isExpanded: true,
+                      hint: const Text("Please Choose University Year"),
+                      items: [
+                        'First Year',
+                        'Secondary Year',
+                        'Third Year',
+                        'Fourth Year',
+                        'Fifth Year'
+                      ]
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (c) {
+                        setState(() {
+                          universityYear = c!;
+                        });
                       },
-                      controller: universityYear,
-                      style: const TextStyle(fontSize: 19),
-                      decoration: InputDecoration(
-                        hintText: 'Enter University Year',
-                        // errorText: 'Error!',
-                        // errorStyle: TextStyle(fontSize: 21),
-                        prefixIcon: const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Icon(Icons.school, size: 40),
-                        ),
-                        contentPadding: const EdgeInsets.all(20),
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
                     ),
                   ),
                   Container(
@@ -228,11 +210,13 @@ setState(() {
                   Container(
                     margin: const EdgeInsets.all(20),
                     child: MaterialButton(
-
-                      onPressed: () {
+                      onPressed: () async {
                         AppLogic.addStudent();
 
-                        formstate.currentState!.reset() ;
+                        formstate.currentState!.reset();
+                        studentdb = await sqldb.readData(
+                            "SELECT * FROM `student` Group By `studentname`");
+
                         setState(() {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -240,13 +224,15 @@ setState(() {
                             behavior: SnackBarBehavior.floating,
                             duration: Duration(seconds: 2),
                           ));
-                          studentname.text = "" ;
-                          universityid.text = "" ;
-                          birthday.text = "" ;
-                          facultydep = null ;
+                          studentname.text = "";
+                          universityid.text = "";
+                          birthday.text = "";
+                          universityYear = null;
+                          facultydep = null;
                         });
+                        Navigator.of(context).pop();
                       },
-                      color:Colors.purple.shade900 ,
+                      color: Colors.purple.shade900,
                       padding: const EdgeInsets.symmetric(vertical: 30),
                       child: const Text("Add Student Record"),
                     ),

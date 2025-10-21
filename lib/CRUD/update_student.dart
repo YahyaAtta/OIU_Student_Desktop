@@ -1,6 +1,9 @@
-import 'package:desktop_view/main.dart';
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:oiu_student_desktop/main.dart';
 import 'package:flutter/material.dart';
 
+import '../model/modal_data.dart';
 
 class UpdateStudent extends StatefulWidget {
   final Map data;
@@ -33,21 +36,23 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
 `universityYear` = "$edituniversityYear" ,`skill`="$editskill" WHERE studentid = ${widget.data['studentid']}
 ''');
 
-      if (response >= 1) {
-        // ignore: use_build_context_synchronously
+      if (response > 0) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Edit Student Successfully"),
+          content: Text("Update Student Successfully"),
           behavior: SnackBarBehavior.floating,
           duration: Duration(seconds: 2),
         ));
       }
     }
   }
+
   @override
   void initState() {
-     editfacultydep = widget.data['facultydep'] ;
+    editfacultydep = widget.data['facultydep'];
+    edituniversityYear = widget.data['universityYear'];
     super.initState();
   }
+
   String? editstudentname;
 
   @override
@@ -93,7 +98,7 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
                       },
                       style: const TextStyle(fontSize: 19),
                       decoration: InputDecoration(
-                        hintText: 'Edit student Name',
+                        hintText: 'Update student Name',
 
                         // errorText: 'Error!',
                         // errorStyle: TextStyle(fontSize: 21),
@@ -112,6 +117,7 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
                   Container(
                     margin: const EdgeInsets.all(12),
                     child: TextFormField(
+                      readOnly: true,
                       initialValue: widget.data['universityid'].toString(),
                       onSaved: (val) {
                         edituniversityid = val;
@@ -119,7 +125,7 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
                       style: const TextStyle(fontSize: 19),
                       maxLength: 10,
                       decoration: InputDecoration(
-                        hintText: 'Edit University ID',
+                        hintText: 'Update University ID',
                         // errorText: 'Error!',
                         // errorStyle: TextStyle(fontSize: 21),
                         prefixIcon: const Padding(
@@ -143,7 +149,7 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
                       initialValue: widget.data['birthday'].toString(),
                       style: const TextStyle(fontSize: 19),
                       decoration: InputDecoration(
-                        hintText: 'Edit Birthday',
+                        hintText: 'Update Birthday',
 
                         // errorText: 'Error!',
                         // errorStyle: TextStyle(fontSize: 21),
@@ -165,36 +171,45 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
                     isExpanded: true,
                     hint: const Text("Please Choose Your Department"),
                     items: [
-                      'Computer Science' , 'Information Technology' , 'Information System'
-                    ].map((e) => DropdownMenuItem(value: e,child: Text(e) ,)).toList(),
-                    onChanged: (c){
+                      'Computer Science',
+                      'Information Technology',
+                      'Information System'
+                    ]
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    onChanged: (c) {
                       setState(() {
-                        editfacultydep = c! ;
+                        editfacultydep = c!;
                       });
                     },
-                  ) ,
+                  ),
                   Container(
                     margin: const EdgeInsets.all(12),
-                    child: TextFormField(
-                      initialValue: widget.data['universityYear'],
-                      onSaved: (val) {
-                        edituniversityYear = val;
+                    child: DropdownButton(
+                      value: edituniversityYear,
+                      alignment: Alignment.topLeft,
+                      isExpanded: true,
+                      hint: const Text("Please Choose University Year"),
+                      items: [
+                        'First Year',
+                        'Secondary Year',
+                        'Third Year',
+                        'Fourth Year',
+                        'Fifth Year'
+                      ]
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (c) {
+                        setState(() {
+                          edituniversityYear = c!;
+                        });
                       },
-                      style: const TextStyle(fontSize: 19),
-                      decoration: InputDecoration(
-                        hintText: 'Edit University Year',
-                        // errorText: 'Error!',
-                        // errorStyle: TextStyle(fontSize: 21),
-                        prefixIcon: const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Icon(Icons.school, size: 40),
-                        ),
-                        contentPadding: const EdgeInsets.all(20),
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
                     ),
                   ),
                   Container(
@@ -206,7 +221,7 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
                       },
                       style: const TextStyle(fontSize: 19),
                       decoration: InputDecoration(
-                        hintText: 'Edit Skill',
+                        hintText: 'Update Skill',
                         // errorText: 'Error!',
                         // errorStyle: TextStyle(fontSize: 21),
                         prefixIcon: const Padding(
@@ -224,14 +239,16 @@ UPDATE `student` SET `studentname` ="$editstudentname" ,`universityid`=$edituniv
                   Container(
                     margin: const EdgeInsets.all(20),
                     child: MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          updateStudent();
-                        });
+                      onPressed: () async {
+                        updateStudent();
+                        studentdb = await sqldb.readData(
+                            "SELECT * FROM `student` Group By `studentname`");
+                        setState(() {});
+                        Navigator.of(context).pop();
                       },
-                      color:Colors.purple.shade900,
+                      color: Colors.purple.shade900,
                       padding: const EdgeInsets.symmetric(vertical: 30),
-                      child: const Text("Edit Student Record"),
+                      child: const Text("Update Student Record"),
                     ),
                   )
                 ],

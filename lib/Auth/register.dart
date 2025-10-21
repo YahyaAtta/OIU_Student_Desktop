@@ -1,12 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:desktop_view/Auth/login.dart';
-import 'package:desktop_view/animation/animate.dart';
-import 'package:desktop_view/main.dart';
+import 'package:oiu_student_desktop/Auth/login.dart';
+import 'package:oiu_student_desktop/animation/animate.dart';
+import 'package:oiu_student_desktop/main.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -17,7 +17,6 @@ class _RegisterState extends State<Register> {
 
   @override
   void initState() {
-    sqldb.initWinDB();
     super.initState();
   }
 
@@ -42,9 +41,11 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
           content: Text("Register Successfully"),
           duration: Duration(seconds: 1),
         );
+        formdata.reset();
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        Navigator.of(context)
-            .pushReplacement(ScaleAnimate(page: const Login()));
+        Navigator.of(
+          context,
+        ).pushReplacement(ScaleAnimate(page: const Login()));
       }
     }
   }
@@ -73,30 +74,25 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                 borderRadius: BorderRadius.circular(25),
               ),
               padding: const EdgeInsets.only(top: 200),
-              child: const Column(
-                children: [],
-              ),
+              child: const Column(children: []),
             ),
           ),
           Expanded(
             child: Form(
               key: formstate,
               child: Container(
-                padding: const EdgeInsets.only(
-                  top: 2,
-                ),
+                padding: const EdgeInsets.only(top: 2),
                 child: Column(
                   children: [
-                    const Icon(
-                      Icons.account_circle_rounded,
-                      size: 60,
+                    const Icon(Icons.account_circle_rounded, size: 60),
+                    const Text(
+                      "Register User",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const Text("Register User",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold)),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     Container(
                       margin: const EdgeInsets.only(left: 30, right: 30),
                       child: TextFormField(
@@ -109,7 +105,9 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                           return null;
                         },
                         style: const TextStyle(
-                            fontSize: 21, fontWeight: FontWeight.w500),
+                          fontSize: 21,
+                          fontWeight: FontWeight.w500,
+                        ),
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.person),
                           hintText: 'Enter Username',
@@ -121,9 +119,7 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Container(
                       margin: const EdgeInsets.only(left: 30, right: 30),
                       child: TextFormField(
@@ -135,7 +131,9 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                           return null;
                         },
                         style: const TextStyle(
-                            fontSize: 21, fontWeight: FontWeight.w500),
+                          fontSize: 21,
+                          fontWeight: FontWeight.w500,
+                        ),
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.email),
                           hintText: 'Enter Email',
@@ -147,15 +145,15 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Container(
                       margin: const EdgeInsets.only(left: 30, right: 30),
                       child: TextFormField(
                         controller: password,
                         style: const TextStyle(
-                            fontSize: 21, fontWeight: FontWeight.w500),
+                          fontSize: 21,
+                          fontWeight: FontWeight.w500,
+                        ),
                         validator: (valid) {
                           if (valid!.isEmpty) {
                             return 'Cannot be Empty';
@@ -168,7 +166,7 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
 
                         obscureText: isVisible, // char to **** true
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.email_rounded),
+                          prefixIcon: const Icon(Icons.password_rounded),
                           hintText: "Enter Password",
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -176,9 +174,11 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                                 isVisible = !isVisible;
                               });
                             },
-                            icon: Icon(isVisible
-                                ? Icons.remove_red_eye_outlined
-                                : Icons.remove_red_eye_rounded),
+                            icon: Icon(
+                              isVisible
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.remove_red_eye_rounded,
+                            ),
                           ),
                           contentPadding: const EdgeInsets.all(15),
                           filled: false,
@@ -188,15 +188,15 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Container(
                       margin: const EdgeInsets.only(left: 30, right: 30),
                       child: TextFormField(
                         controller: retypepassword,
                         style: const TextStyle(
-                            fontSize: 21, fontWeight: FontWeight.w500),
+                          fontSize: 21,
+                          fontWeight: FontWeight.w500,
+                        ),
                         validator: (valid) {
                           if (valid!.isEmpty) {
                             return 'Cannot be Empty';
@@ -209,17 +209,19 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
 
                         obscureText: isVisible2, // char to **** true
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.email_rounded),
-                          hintText: "Enter RetypePassword",
+                          prefixIcon: const Icon(Icons.password_rounded),
+                          hintText: "Confirm Password",
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
                                 isVisible2 = !isVisible2;
                               });
                             },
-                            icon: Icon(isVisible2
-                                ? Icons.remove_red_eye_outlined
-                                : Icons.remove_red_eye_rounded),
+                            icon: Icon(
+                              isVisible2
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.remove_red_eye_rounded,
+                            ),
                           ),
                           contentPadding: const EdgeInsets.all(15),
                           filled: false,
@@ -229,14 +231,14 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: validData,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 60, vertical: 30),
+                          horizontal: 60,
+                          vertical: 30,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(13),
                         ),
@@ -246,18 +248,17 @@ INSERT INTO `users`(`email`,`username`,`password`,`retypepassword`) VALUES
                         style: TextStyle(fontSize: 18.5),
                       ),
                     ),
-                    const SizedBox(
-                      height: 25,
-                    ),
+                    const SizedBox(height: 25),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacement(ScaleAnimate(page: const Login()));
+                        Navigator.of(
+                          context,
+                        ).pushReplacement(ScaleAnimate(page: const Login()));
                       },
-                      child: const Text("Don't Have Account ? Login",
-                          style: TextStyle(
-                            fontSize: 15,
-                          )),
+                      child: const Text(
+                        "Don't Have Account ? Login",
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
                   ],
                 ),

@@ -1,9 +1,11 @@
-import 'package:desktop_view/CRUD/details.dart';
-import 'package:desktop_view/animation/animate.dart';
+import 'package:oiu_student_desktop/CRUD/details.dart';
+import 'package:oiu_student_desktop/animation/animate.dart';
 import 'package:flutter/material.dart';
-import 'package:desktop_view/model/modal_data.dart';
+import 'package:oiu_student_desktop/model/modal_data.dart';
+
 int selectedItem = 0;
 String text = "Student name";
+
 class Search extends SearchDelegate {
   @override
   List<Widget>? buildActions(BuildContext context) {

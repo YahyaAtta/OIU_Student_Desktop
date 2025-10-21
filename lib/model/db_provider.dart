@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart' ;
+import 'package:path_provider/path_provider.dart';
+
 class Sqldb {
   var databaseFactory = databaseFactoryFfi;
+  String databaseName = "OIURegister";
   static Database? _db;
   Future<Database?> get db async {
     if (_db == null) {
@@ -15,35 +17,54 @@ class Sqldb {
 
   Future<Database?> initWinDB() async {
     sqfliteFfiInit();
-    Directory dbpath = await getApplicationDocumentsDirectory() ;
-    String  fullPath = join(dbpath.path, "student.db");
-    Database db = await databaseFactory.openDatabase(fullPath,
-        options: OpenDatabaseOptions(onCreate: onCreate, version: 3));
+    Directory dbpath = await getApplicationDocumentsDirectory();
+    String fullPath = join(dbpath.path, "$databaseName.db");
+    Database db = await databaseFactory.openDatabase(
+      fullPath,
+      options: OpenDatabaseOptions(onCreate: onCreate, version: 3),
+    );
     return db;
   }
 
   Future onCreate(Database db, int version) async {
-    await db.execute('''
+    await db.transaction((Transaction txn) async {
+      await txn.execute('''
     CREATE TABLE `student`(
       studentid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
-      studentname TEXT NOT NULL ,
+      studentname TEXT NOT NULL UNIQUE ,
       universityid INTEGER NOT NULL UNIQUE ,
       birthday INTEGER NOT NULL,
       faculty TEXT NOT NULL DEFAULT 'Computer Science And Information Technology', 
       facultydep TEXT NOT NULL, 
-      universityYear TEXT NOT NULL UNIQUE,
+      universityYear TEXT NOT NULL,
       skill TEXT NOT NULL DEFAULT 'CS'
     )
 ''');
-    await db.execute('''
+      await txn.execute('''
   CREATE TABLE `users`(
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
   email TEXT NOT NULL UNIQUE ,
   username TEXT NOT NULL UNIQUE ,
   password TEXT NOT NULL , 
-  retypepassword TEXT NOT NULL
+  retypepassword TEXT NOT NULL , 
   )
 ''');
+    });
+  }
+
+  multipleDeleteData(
+    String table,
+    String queryId,
+    String placeholder,
+    List<int> ids,
+  ) async {
+    Database? mydb = await db;
+    int response = await mydb!.delete(
+      table,
+      where: '$queryId IN ($placeholder)',
+      whereArgs: ids,
+    );
+    return response;
   }
 
   readData(String sql) async {
@@ -72,7 +93,7 @@ class Sqldb {
 
   mydeleteDatabase() async {
     String databasepath = await databaseFactory.getDatabasesPath();
-    String path = join(databasepath, "student.db");
+    String path = join(databasepath, "$databaseName.db");
     await deleteDatabase(path);
   }
 }

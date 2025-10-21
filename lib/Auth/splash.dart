@@ -1,11 +1,13 @@
-import 'package:desktop_view/Auth/login.dart';
-import 'package:desktop_view/CRUD/dashboard.dart';
-import 'package:desktop_view/animation/animate.dart';
-import 'package:desktop_view/main.dart';
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:oiu_student_desktop/Auth/login.dart';
+import 'package:oiu_student_desktop/CRUD/dashboard.dart';
+import 'package:oiu_student_desktop/animation/animate.dart';
+import 'package:oiu_student_desktop/main.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -16,7 +18,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     sqldb.initWinDB();
     Future.delayed(const Duration(seconds: 1), () {
-      Navigator.of(context).pushReplacement(ScaleAnimate(page: sharedPreferences!.getString("username") !=null ? Dashboard(userdata: username) :const Login()));
+      Navigator.of(context).pushReplacement(
+        ScaleAnimate(
+          page: sharedPreferences!.getString("username") != null
+              ? Dashboard(userdata: username)
+              : const Login(),
+        ),
+      );
     });
     super.initState();
   }
@@ -27,14 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Icon(
-              Icons.school_rounded,
-              size: 100,
-            ),
-          ),
-        ],
+        children: [Center(child: Icon(Icons.school_rounded, size: 100))],
       ),
     );
   }

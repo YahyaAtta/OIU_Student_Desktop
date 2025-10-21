@@ -1,46 +1,55 @@
 // import 'package:audioplayers/audioplayers.dart';
-import 'package:desktop_view/Auth/login.dart';
-import 'package:desktop_view/CRUD/add_student.dart';
-import 'package:desktop_view/CRUD/delete_student.dart';
-import 'package:desktop_view/CRUD/update_students.dart';
-import 'package:desktop_view/animation/animate.dart';
-import 'package:desktop_view/CRUD/read_student.dart';
-import 'package:desktop_view/filter/search_student.dart';
-import 'package:desktop_view/main.dart';
+import 'package:oiu_student_desktop/Auth/login.dart';
+import 'package:oiu_student_desktop/Auth/user.dart';
+import 'package:oiu_student_desktop/CRUD/add_student.dart';
+import 'package:oiu_student_desktop/CRUD/delete_student.dart';
+import 'package:oiu_student_desktop/CRUD/update_students.dart';
+import 'package:oiu_student_desktop/animation/animate.dart';
+import 'package:oiu_student_desktop/CRUD/read_student.dart';
+import 'package:oiu_student_desktop/filter/search_student.dart';
+import 'package:oiu_student_desktop/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:win32/win32.dart';
-void signOut(BuildContext context){
+
+void signOut(BuildContext context) {
   sharedPreferences!.clear();
-  Navigator.of(context).pushAndRemoveUntil(
-      ScaleAnimate(page: const Login()) , (route) => false,);
-  if(kDebugMode){
-    playSound(context,
-        r"assets/audios/logoff.wav");
-  }
-  else{
-    playSound(context,
-        r"data/flutter_assets/assets/audios/logoff.wav");
+  Navigator.of(
+    context,
+  ).pushAndRemoveUntil(ScaleAnimate(page: const Login()), (route) => false);
+  if (kDebugMode) {
+    playSound(context, r"assets/audios/logoff.wav");
+  } else {
+    playSound(context, r"data/flutter_assets/assets/audios/logoff.wav");
   }
 }
 
-void showMessageLogout({required String msgTitle , required String msg ,int messageType = MB_ICONINFORMATION , int actions =MB_YESNO , int secondButton = MB_DEFBUTTON2 ,required BuildContext context}){
+void showMessageLogout({
+  required String msgTitle,
+  required String msg,
+  int messageType = MB_ICONINFORMATION,
+  int actions = MB_YESNO,
+  int secondButton = MB_DEFBUTTON2,
+  required BuildContext context,
+}) {
   final title = TEXT(msgTitle);
   final message = TEXT(msg);
   final result = MessageBox(
-      NULL,
-      message,
-      title,
-      messageType | // Warning
-      actions | // Action button
-      secondButton// Second button is the default
+    NULL,
+    message,
+    title,
+    messageType | // Warning
+        actions | // Action button
+        secondButton, // Second button is the default
   );
-switch(result){
-  case IDYES:signOut(context) ;
-  case IDNO:debugPrint("Button Pressed") ;
-}
+  switch (result) {
+    case IDYES:
+      signOut(context);
+    case IDNO:
+      debugPrint("Button Pressed");
+  }
   free(message);
   free(title);
 }
@@ -53,13 +62,14 @@ playSound(BuildContext context, String path) async {
     File f = File(logonSound);
     debugPrint('WAV file missing.');
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Message"),
-            content: Text("WAV File Missing\nFile Path:${f.path}"),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Message"),
+          content: Text("WAV File Missing\nFile Path:${f.path}"),
+        );
+      },
+    );
   } else {
     final pszLogonSound = logonSound.toNativeUtf16();
     final result = PlaySound(pszLogonSound, NULL, SND_FILENAME | SND_ASYNC);
@@ -81,8 +91,6 @@ class Dashboard extends StatefulWidget {
 bool visible = false;
 
 class _DashboardState extends State<Dashboard> {
-
-
   String images = 'assets/images';
   bool onLoading = true;
   elementVisible() async {
@@ -102,13 +110,11 @@ class _DashboardState extends State<Dashboard> {
       visible = true;
       username = widget.userdata;
     });
-      if(kDebugMode){
-        playSound(context,r"assets/audios/startup.wav") ;
-      }
-      else{
-        playSound(context,r"data/flutter_assets/assets/audios/startup.wav") ;
-
-      }
+    if (kDebugMode) {
+      playSound(context, r"assets/audios/startup.wav");
+    } else {
+      playSound(context, r"data/flutter_assets/assets/audios/startup.wav");
+    }
     Future.delayed(const Duration(seconds: 4), () {
       setState(() {
         visible = false;
@@ -126,8 +132,9 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(children: [
-        SizedBox(
+      body: Row(
+        children: [
+          SizedBox(
             width: 200,
             child: Container(
               margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10),
@@ -143,9 +150,7 @@ class _DashboardState extends State<Dashboard> {
                     'OIU Student',
                     style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   Visibility(
                     visible: visible,
                     maintainAnimation: true,
@@ -153,36 +158,54 @@ class _DashboardState extends State<Dashboard> {
                     maintainState: true,
                     child: const Text(
                       'Loading......',
-                      style:
-                          TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 12,
-                  ),
+                  const SizedBox(height: 12),
                   visible == true
                       ? const Center(
-                          child: CircleAvatar(
-                          backgroundColor: Colors.black38,
-                          radius: 50,
-                          child: CircularProgressIndicator(),
-                        ))
+                          child: InkWell(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black38,
+                              radius: 50,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        )
                       : Column(
                           children: [
-                            const CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.black38,
-                              child:
-                                  Icon(Icons.account_circle_outlined, size: 70),
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  ScaleAnimate(
+                                    page: UserInfo(
+                                      username: sharedPreferences!.getString(
+                                        "username",
+                                      )!,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const CircleAvatar(
+                                radius: 50,
+                                backgroundColor: Colors.black38,
+                                child: Icon(
+                                  Icons.account_circle_outlined,
+                                  size: 70,
+                                ),
+                              ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            const SizedBox(height: 10),
                             Text(
                               'Welcome ${sharedPreferences!.getString("username")}',
                               style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            )
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                   Container(
@@ -191,21 +214,28 @@ class _DashboardState extends State<Dashboard> {
                       alignment: Alignment.bottomCenter,
                       child: MaterialButton(
                         shape: const CircleBorder(),
-                        onPressed: () {
-                          showMessageLogout(context: context,msgTitle: "Message", msg: "Are you sure to sign out? ") ;
-                        },
+                        onPressed: onLoading == true
+                            ? null
+                            : () {
+                                showMessageLogout(
+                                  context: context,
+                                  msgTitle: "Message",
+                                  msg: "Are you sure to sign out? ",
+                                );
+                              },
                         child: Image.asset(
-                            'assets/images/icons8-logout-rounded-left-64.png'),
+                          'assets/images/icons8-logout-rounded-left-64.png',
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-            )),
-        Expanded(
-          child: ListView(
-            children: [
-              Column(
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -213,8 +243,9 @@ class _DashboardState extends State<Dashboard> {
                     onTap: onLoading == true
                         ? null
                         : () {
-                            Navigator.of(context)
-                                .push(ScaleAnimate(page: const ReadStudent()));
+                            Navigator.of(
+                              context,
+                            ).push(ScaleAnimate(page: const ReadStudent()));
                           },
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
@@ -224,7 +255,6 @@ class _DashboardState extends State<Dashboard> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: Colors.black54,
-
                         gradient: const LinearGradient(
                           colors: [
                             Colors.deepPurple,
@@ -234,23 +264,21 @@ class _DashboardState extends State<Dashboard> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            width: 60,
-                          ),
+                          const SizedBox(width: 60),
                           Align(
                             alignment: Alignment.centerLeft,
-                            child:
-                                Image.asset('$images/icons8-student-642.png'),
+                            child: Image.asset(
+                              '$images/icons8-student-642.png',
+                            ),
                           ),
-                          const SizedBox(
-                            width: 44,
-                          ),
+                          const SizedBox(width: 44),
                           const Text(
                             'Show Students',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -260,8 +288,9 @@ class _DashboardState extends State<Dashboard> {
                     onTap: onLoading == true
                         ? null
                         : () {
-                            Navigator.of(context)
-                                .push(ScaleAnimate(page: const AddStudent()));
+                            Navigator.of(
+                              context,
+                            ).push(ScaleAnimate(page: const AddStudent()));
                           },
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
@@ -280,22 +309,19 @@ class _DashboardState extends State<Dashboard> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            width: 60,
-                          ),
+                          const SizedBox(width: 60),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Image.asset('$images/icons8-add-64.png'),
                           ),
-                          const SizedBox(
-                            width: 40,
-                          ),
+                          const SizedBox(width: 40),
                           const Text(
                             'Add Student Record',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -305,8 +331,9 @@ class _DashboardState extends State<Dashboard> {
                     onTap: onLoading == true
                         ? null
                         : () {
-                            Navigator.of(context).push(
-                                ScaleAnimate(page: const UpdateStudents()));
+                            Navigator.of(
+                              context,
+                            ).push(ScaleAnimate(page: const UpdateStudents()));
                           },
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
@@ -325,22 +352,19 @@ class _DashboardState extends State<Dashboard> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            width: 60,
-                          ),
+                          const SizedBox(width: 60),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Image.asset('$images/icons8-update-64.png'),
                           ),
-                          const SizedBox(
-                            width: 30,
-                          ),
+                          const SizedBox(width: 30),
                           const Text(
                             'Update Student Record',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -350,8 +374,9 @@ class _DashboardState extends State<Dashboard> {
                     onTap: onLoading == true
                         ? null
                         : () {
-                            Navigator.of(context).push(
-                                ScaleAnimate(page: const DeleteStudent()));
+                            Navigator.of(
+                              context,
+                            ).push(ScaleAnimate(page: const DeleteStudent()));
                           },
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
@@ -362,30 +387,24 @@ class _DashboardState extends State<Dashboard> {
                       decoration: BoxDecoration(
                         color: Colors.black54,
                         gradient: const LinearGradient(
-                          colors: [
-                            Colors.red,
-                            Color.fromARGB(255, 16, 11, 9),
-                          ],
+                          colors: [Colors.red, Color.fromARGB(255, 16, 11, 9)],
                         ),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            width: 60,
-                          ),
+                          const SizedBox(width: 60),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Image.asset('$images/icons8-remove-641.png'),
                           ),
-                          const SizedBox(
-                            width: 44,
-                          ),
+                          const SizedBox(width: 44),
                           const Text(
                             'Delete Student Record',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -395,8 +414,9 @@ class _DashboardState extends State<Dashboard> {
                     onTap: onLoading == true
                         ? null
                         : () {
-                            Navigator.of(context).push(
-                                ScaleAnimate(page: const SearchStudent()));
+                            Navigator.of(
+                              context,
+                            ).push(ScaleAnimate(page: const SearchStudent()));
                           },
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
@@ -415,22 +435,19 @@ class _DashboardState extends State<Dashboard> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            width: 60,
-                          ),
+                          const SizedBox(width: 60),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Image.asset('$images/icons8-search-64.png'),
                           ),
-                          const SizedBox(
-                            width: 44,
-                          ),
+                          const SizedBox(width: 44),
                           const Text(
                             'Search Students',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -438,10 +455,10 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

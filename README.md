@@ -1,4 +1,4 @@
-# desktop_view
+# oiu_student_desktop
 
 A new Flutter project.
 

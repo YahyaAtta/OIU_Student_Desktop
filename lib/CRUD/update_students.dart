@@ -1,8 +1,8 @@
-import 'package:desktop_view/CRUD/update_student.dart';
-import 'package:desktop_view/animation/animate.dart';
-import 'package:desktop_view/main.dart';
+import 'package:oiu_student_desktop/CRUD/update_student.dart';
+import 'package:oiu_student_desktop/animation/animate.dart';
+import 'package:oiu_student_desktop/main.dart';
 import 'package:flutter/material.dart';
-import 'package:desktop_view/model/modal_data.dart';
+import 'package:oiu_student_desktop/model/modal_data.dart';
 
 class UpdateStudents extends StatefulWidget {
   const UpdateStudents({super.key});
