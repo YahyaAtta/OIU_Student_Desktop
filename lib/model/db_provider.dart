@@ -92,8 +92,15 @@ class Sqldb {
   }
 
   mydeleteDatabase() async {
-    String databasepath = await databaseFactory.getDatabasesPath();
-    String path = join(databasepath, "$databaseName.db");
-    await deleteDatabase(path);
+    if (Platform.isAndroid) {
+      String databasepath = await getDatabasesPath();
+      String path = join(databasepath, "$databaseName.db");
+      await deleteDatabase(path);
+    } else {
+      sqfliteFfiInit();
+      Directory databasepath = (await getApplicationDocumentsDirectory());
+      String path = join(databasepath.path, "$databaseName.db");
+      await databaseFactory.deleteDatabase(path);
+    }
   }
 }

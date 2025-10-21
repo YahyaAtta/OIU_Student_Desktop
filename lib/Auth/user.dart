@@ -1,7 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:io';
-
 import 'package:oiu_student_desktop/Auth/login.dart';
 import 'package:oiu_student_desktop/animation/animate.dart';
 import 'package:oiu_student_desktop/main.dart';
@@ -24,7 +21,7 @@ class _UserInfoState extends State<UserInfo> {
     ).pushAndRemoveUntil(ScaleAnimate(page: const Login()), (route) => false);
     await Future.delayed(Duration(seconds: 2), () async {
       await sqldb.mydeleteDatabase();
-      exit(0);
+      ExitProcess(0);
     });
   }
 
