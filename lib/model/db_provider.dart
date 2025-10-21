@@ -46,7 +46,7 @@ class Sqldb {
   email TEXT NOT NULL UNIQUE ,
   username TEXT NOT NULL UNIQUE ,
   password TEXT NOT NULL , 
-  retypepassword TEXT NOT NULL , 
+  retypepassword TEXT NOT NULL
   )
 ''');
     });
