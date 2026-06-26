@@ -1,16 +1,11 @@
 # OIU Student Desktop
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##Getting Started
+OIU Student Desktop Specially Built with Flutter Windows and Integrated Feature Windows Native Like msgBox and Play Sound .wav using win32 package.
+- sqflite_common_ffi using it to store data in local database
+  OIU Student Desktop is Registeration Simpler For Student For Faculty Of Computer Science and Information Technology:
+  Contains Features:
+  Create , Read , Update , Search and Delete Student
+  Add Optional Image if you want
+  Multiple Delete At Same Time
+  Search Student Via Student Id , Student Name , Student Year
+  Login , Register Screens
