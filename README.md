@@ -5,7 +5,6 @@ OIU Student Desktop Specially Built with Flutter Windows and Integrated Feature 
   OIU Student Desktop is Registeration Simpler For Student For Faculty Of Computer Science and Information Technology:
   Contains Features:
   Create , Read , Update , Search and Delete Student
-  Add Optional Image if you want
   Multiple Delete At Same Time
   Search Student Via Student Id , Student Name , Student Year
   Login , Register Screens
