@@ -1,5 +1,6 @@
 # OIU Student Desktop
-##Getting Started
+
+# Project Description:
 
 OIU Student Desktop Specially Built with Flutter Windows.
   OIU Student Desktop is Registeration Simpler For Student For Faculty Of Computer Science and Information Technology:
